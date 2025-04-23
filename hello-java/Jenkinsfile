@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/gnanendra9398/hello-java.git'
+                git 'https://github.com/gnanendra9398/DEVOPS.git'
             }
         }
 
