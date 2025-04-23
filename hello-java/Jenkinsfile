@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven3'
+    }
+
+    environment {
+        IMAGE_NAME = 'hello-java:latest'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/gnanendra9398/hello-java.git'
+            }
+        }
+
+        stage('Build with Maven') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME .'
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                sh 'docker run --rm $IMAGE_NAME'
+            }
+        }
+    }
+}
