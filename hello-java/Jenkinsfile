@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        RECIPIENTS = 'gnanendra9398@gmail.com'
+        RECIPIENTS = 'gnanendrachembeti9398@gmail.com'
         IMAGE_NAME = 'hello-java:latest'
     }
 
