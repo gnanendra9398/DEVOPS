@@ -41,11 +41,9 @@ pipeline {
 
     sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
     sh 'docker push myimage:latest'
-}
-
-                
+}     
             }
-        }
+        
         stage('Notify') {
             steps {
                 mail to: "${env.RECIPIENTS}",
@@ -53,7 +51,7 @@ pipeline {
                      body: "Great news! The build completed successfully.\n\nJob: ${env.JOB_NAME}\nBuild Number: ${env.BUILD_NUMBER}\nBuild URL: ${env.BUILD_URL}"
             }
         }
-    }
+    
 
     post {
         failure {
@@ -62,6 +60,6 @@ pipeline {
                  body: "Unfortunately, the build failed.\n\nJob: ${env.JOB_NAME}\nBuild Number: ${env.BUILD_NUMBER}\nCheck the console output at: ${env.BUILD_URL}"
         }
     }
-
     }
+}
 
