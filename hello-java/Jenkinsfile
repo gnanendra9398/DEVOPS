@@ -32,11 +32,11 @@ pipeline {
                 withCredentials([
                     usernamePassword(
                         credentialsId: '2c677e22-aba8-40e2-949d-fcb39f21aa85',
-                        usernameVariable: 'gnanendra9398',
-                        passwordVariable: 'Gnani@9398'
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
                     )
                 ]) {
-                    sh 'docker login -u $gnanendra9398 -p $Gnani@9398'
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                 }
             }
         }
