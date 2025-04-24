@@ -6,6 +6,7 @@ pipeline {
     }
 
     environment {
+        RECIPIENTS = 'gnanendra9398@gmail.com'
         IMAGE_NAME = 'hello-java:latest'
     }
 
@@ -31,7 +32,25 @@ pipeline {
         stage('Run Container') {
             steps {
                 sh 'docker run --rm $IMAGE_NAME'
+                
+            }
+        }
+        stage('Notify') {
+            steps {
+                mail to: "${env.RECIPIENTS}",
+                     subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                     body: "Great news! The build completed successfully.\n\nJob: ${env.JOB_NAME}\nBuild Number: ${env.BUILD_NUMBER}\nBuild URL: ${env.BUILD_URL}"
             }
         }
     }
-}
+
+    post {
+        failure {
+            mail to: "${env.RECIPIENTS}",
+                 subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 body: "Unfortunately, the build failed.\n\nJob: ${env.JOB_NAME}\nBuild Number: ${env.BUILD_NUMBER}\nCheck the console output at: ${env.BUILD_URL}"
+        }
+    }
+
+    }
+
