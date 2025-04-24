@@ -27,21 +27,19 @@ pipeline {
                 sh 'docker build -t $IMAGE_NAME .'
             }
         }
-        
-        stage ('push image') {
-            steps { 
+         stage('Docker Login') {
+            steps {
                 withCredentials([
-                usernamePassword(
-                credentialsId: '2c677e22-aba8-40e2-949d-fcb39f21aa85',
-                usernameVariable: 'gnanendra9398',
-                passwordVariable: 'Gnani@9398'
-    )
-]) 
-
-                sh 'docker login -u $gnanendra9398 -p $Gnani@9398'
-                sh 'docker push myimage:latest'
-             }     
-         }
+                    usernamePassword(
+                        credentialsId: '2c677e22-aba8-40e2-949d-fcb39f21aa85',
+                        usernameVariable: 'gnanendra9398',
+                        passwordVariable: 'Gnani@9398'
+                    )
+                ]) {
+                    sh 'docker login -u $gnanendra9398 -p $Gnani@9398'
+                }
+            }
+        }
         
      }
 }
