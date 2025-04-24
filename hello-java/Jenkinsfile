@@ -28,10 +28,21 @@ pipeline {
                 sh 'docker build -t $IMAGE_NAME .'
             }
         }
+        
+        stage ('push image') {
+            steps { 
+                withCredentials([
+                usernamePassword(
+                credentialsId: '2c677e22-aba8-40e2-949d-fcb39f21aa85',
+                usernameVariable: 'gnanendra9398',
+                passwordVariable: 'Gnani@9398'
+    )
+]) 
 
-        stage('Run Container') {
-            steps {
-                sh 'docker run --rm $IMAGE_NAME'
+    sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
+    sh 'docker push myimage:latest'
+}
+
                 
             }
         }
