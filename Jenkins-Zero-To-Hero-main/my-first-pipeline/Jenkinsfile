@@ -2,6 +2,9 @@ pipeline {
   agent {
     docker { image 'node:16-alpine' }
   }
+   environment {
+        RECIPIENTS = 'gnanendrachembeti9398@gmail.com'
+    }
   stages {
     stage('Test') {
       steps {
