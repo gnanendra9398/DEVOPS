@@ -52,9 +52,9 @@ pipeline {
             }
         }
 
-    post {
-        failure {
-            mail to: "${env.RECIPIENTS}",
+           post {
+            failure {
+              mail to: "${env.RECIPIENTS}",
                  subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: "Unfortunately, the build failed.\n\nJob: ${env.JOB_NAME}\nBuild Number: ${env.BUILD_NUMBER}\nCheck the console output at: ${env.BUILD_URL}"
         }
