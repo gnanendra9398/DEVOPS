@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        IMAGE_NAME = 'hello-java:latest'
+        IMAGE_NAME = 'gnanendra9398/my-app'
     }
 
     stages {
@@ -37,7 +37,7 @@ pipeline {
                     )
                 ]) {
                     sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                    sh 'docker whoami'
+                    docker push $IMAGE_NAME:latest
 
                 }
             }
