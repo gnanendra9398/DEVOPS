@@ -6,8 +6,10 @@ pipeline {
     }
 
     environment {
+        RECIPIENTS = 'gnanendrachembeti9398@gmail.com'
         IMAGE_NAME = 'gnanendra9398/my-app'
     }
+    
 
     stages {
         stage('Checkout') {
