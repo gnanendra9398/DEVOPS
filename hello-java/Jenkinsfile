@@ -45,32 +45,23 @@ pipeline {
             }
         }
         stage('Deploy to Dev') {
-            steps {
-                sh "./deploy.sh dev $IMAGE_NAME"
-            }
-        }
+    steps {
+        sh 'chmod +x deploy.sh'
+        sh './deploy.sh dev $DOCKER_IMAGE'
+    }
+}
 
-        stage('Approval for Staging') {
-            steps {
-                input message: "Deploy to Staging?", ok: "Deploy"
-            }
-        }
+stage('Deploy to Staging') {
+    steps {
+        sh 'chmod +x deploy.sh'
+        sh './deploy.sh staging $DOCKER_IMAGE'
+    }
+}
 
-        stage('Deploy to Staging') {
-            steps {
-                sh "./deploy.sh staging $IMAGE_NAME"
-            }
-        }
-
-        stage('Approval for Production') {
-            steps {
-                input message: "Deploy to Production?", ok: "Deploy"
-            }
-        }
-
-        stage('Deploy to Production') {
-            steps {
-                sh "./deploy.sh prod $IMAGE_NAME"
+stage('Deploy to Production') {
+    steps {
+        sh 'chmod +x deploy.sh'
+        sh './deploy.sh prod $DOCKER_IMAGE'
             }
         }
           stage('Notify') {
