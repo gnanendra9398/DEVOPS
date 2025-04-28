@@ -44,26 +44,6 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to Dev') {
-    steps {
-        sh 'chmod +x deploy.sh'
-        sh './deploy.sh dev $DOCKER_IMAGE'
-    }
-}
-
-stage('Deploy to Staging') {
-    steps {
-        sh 'chmod +x deploy.sh'
-        sh './deploy.sh staging $DOCKER_IMAGE'
-    }
-}
-
-stage('Deploy to Production') {
-    steps {
-        sh 'chmod +x deploy.sh'
-        sh './deploy.sh prod $DOCKER_IMAGE'
-            }
-        }
           stage('Notify') {
             steps {
                 mail to: "${env.RECIPIENTS}",
