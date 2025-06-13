@@ -2,9 +2,10 @@ pipeline {
     agent any
 
     environment {
-        RECIPIENTS = 'gnanendrachembeti9398@gmail.com'
+        
         IMAGE_NAME = "my-java-app"
         IMAGE_TAG = "${BUILD_NUMBER}"
+        Repository= "my-java-app"
     }
 
     parameters {
@@ -60,6 +61,13 @@ pipeline {
                 sh 'docker push gnanendra9398/$IMAGE_NAME:${BUILD_NUMBER}'
             }
         }
+        stage('remove image') {
+            steps {
+                sh '''
+                       docker images --format "{{.Repository}}:{{.IMAGE_TAG}}" | \
+                       grep "my-java-app" | sort -t ':' -k2 -n | head -n -1 | xargs -r docker rmi
+                       '''
     }
-          
-}
+        }        
+  }
+}    
