@@ -34,15 +34,6 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                dir('hello-java') {
-                    script {
-                        sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
-                    }
-                }
-            }
-        }
         stage('Docker Login') {
             steps {
                 withCredentials([
@@ -52,10 +43,20 @@ pipeline {
                         passwordVariable: 'DOCKER_PASS'
                     )
                 ]) {
-                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                    sh 'docker push "$IMAGE_NAME:${BUILD_NUMBER}"'
-                    
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
                 }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME:${BUILD_NUMBER} .'
+            }
+        }
+
+        stage('Push Image') {
+            steps {
+                sh 'docker push $IMAGE_NAME:${BUILD_NUMBER}'
             }
         }
           stage('Notify') {
