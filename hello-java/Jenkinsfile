@@ -5,7 +5,7 @@ pipeline {
         
         IMAGE_NAME = "my-java-app"
         IMAGE_TAG = "${BUILD_NUMBER}"
-        Repository= "my-java-app"
+       
     }
 
     parameters {
@@ -64,7 +64,7 @@ pipeline {
         stage('remove image') {
             steps {
                 sh '''
-                       docker images --format "{{.Repository}}:{{.IMAGE_TAG}}" | \
+                       docker images --format "{{.Repository}}:{{.Tag}}" | \
                        grep "my-java-app" | sort -t ':' -k2 -n | head -n -1 | xargs -r docker rmi
                        '''
     }
