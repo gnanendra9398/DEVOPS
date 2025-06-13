@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        RECIPIENTS = 'gnanendrachembeti9398@gmail.com'
         IMAGE_NAME = "my-java-app"
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
@@ -42,29 +43,34 @@ pipeline {
                 }
             }
         }
-
-        // Optional stage if pushing to a registry
-        /*
-        stage('Push Docker Image') {
+        stage('Docker Login') {
             steps {
-                withDockerRegistry([credentialsId: 'docker-hub-cred', url: '']) {
-                    sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} your-dockerhub-username/${IMAGE_NAME}:${IMAGE_TAG}"
-                    sh "docker push your-dockerhub-username/${IMAGE_NAME}:${IMAGE_TAG}"
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'JENKINS',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
+                ]) {
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                    sh 'docker push $IMAGE_NAME'
+                    
                 }
             }
         }
-        */
-    }
-
-    post {
-        always {
-            echo 'Pipeline finished.'
-        }
-        success {
-            echo 'Build and Docker Image created successfully.'
-        }
-        failure {
-            echo 'Pipeline failed.'
+          stage('Notify') {
+            steps {
+                mail to: "${env.RECIPIENTS}",
+                     subject: "Build Successful: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                     body: "Great news! The build completed successfully.\n\nJob: ${env.JOB_NAME}\nBuild Number: ${env.BUILD_NUMBER}\nBuild URL: ${env.BUILD_URL}"
+            }
         }
     }
+           post {
+            failure {
+              mail to: "${env.RECIPIENTS}",
+                 subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 body: "Unfortunately, the build failed.\n\nJob: ${env.JOB_NAME}\nBuild Number: ${env.BUILD_NUMBER}\nCheck the console output at: ${env.BUILD_URL}"
+        }
+    } 
 }
