@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         RECIPIENTS = 'gnanendrachembeti9398@gmail.com'
-        IMAGE_NAME = 'gnanendra9398/my-app'
+        DOCKER_IMAGE = "gnanS:${BUILD_NUMBER}"
     }
     
 
@@ -40,7 +40,7 @@ pipeline {
                 ]) {
                     sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                     sh 'docker push $IMAGE_NAME'
-
+                    
                 }
             }
         }
