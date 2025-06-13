@@ -19,7 +19,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir('hello-java') { // change to your folder if needed
+                dir('hello-java') { 
                     sh 'mvn clean install -DskipTests'
                 }
             }
