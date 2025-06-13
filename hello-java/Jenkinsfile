@@ -1,0 +1,73 @@
+pipeline {
+    agent any
+
+    environment {
+        
+        IMAGE_NAME = "my-java-app"
+        IMAGE_TAG = "${BUILD_NUMBER}"
+       
+    }
+
+    parameters {
+        string(name: 'BRANCH_TAG', defaultValue: 'main', description: 'Git Branch or Tag')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: "${params.BRANCH_TAG}", url: 'https://github.com/gnanendra9398/DEVOPS.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('hello-java') { 
+                    sh 'mvn clean install -DskipTests'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('hello-java') {
+                    sh 'mvn test'
+                }
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'jenkins',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
+                ]) {
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                dir('hello-java'){
+                sh 'docker build -t gnanendra9398/$IMAGE_NAME:${BUILD_NUMBER} .'
+            }
+        }
+        }
+        stage('Push Image') {
+            steps {
+                sh 'docker push gnanendra9398/$IMAGE_NAME:${BUILD_NUMBER}'
+            }
+        }
+        stage('remove image') {
+            steps {
+                sh '''
+                       docker images --format "{{.Repository}}:{{.Tag}}" | \
+                       grep "my-java-app" | sort -t ':' -k2 -n | head -n -1 | xargs -r docker rmi
+                       '''
+    }
+        }        
+  }
+}    
