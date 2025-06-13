@@ -51,13 +51,13 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 dir('hello-java'){
-                sh 'docker build -t $IMAGE_NAME:${BUILD_NUMBER} .'
+                sh 'docker build -t gnanendra9398/$IMAGE_NAME:${BUILD_NUMBER} .'
             }
         }
         }
         stage('Push Image') {
             steps {
-                sh 'docker push $IMAGE_NAME:${BUILD_NUMBER}'
+                sh 'docker push gnanendra9398/$IMAGE_NAME:${BUILD_NUMBER}'
             }
         }
           stage('Notify') {
