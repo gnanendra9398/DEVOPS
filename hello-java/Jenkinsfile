@@ -18,9 +18,14 @@ pipeline {
             }
         }
 
-        stage('Build with Maven') {
-            steps {
-                sh 'mvn clean package'
+            stage('Build') {
+  steps {
+    dir('your-sub-directory-if-any') {
+      sh 'mvn clean install'
+    }
+  }
+}
+
             }
         }
 
