@@ -20,7 +20,7 @@ pipeline {
 
        stage('Build') {
             steps {
-                dir('your-sub-directory-if-any') {
+                dir('hello-java') {
                 sh 'mvn clean install'
     }
   }
