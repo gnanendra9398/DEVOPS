@@ -73,16 +73,24 @@ pipeline {
         }
         stage('Cleanup Old Image in ACR') {
     steps {
+        stage('Delete Previous ACR Tag') {
+    steps {
         script {
-            def oldTag = "${BUILD_NUMBER.toInteger() - 1}"
+            def previousTag = BUILD_NUMBER.toInteger() - 1
+            def fullImageName = "${IMAGE_NAME}:${previousTag}"
+
+            echo "Attempting to delete previous image tag: ${fullImageName} from ACR"
+
             sh """
                 az acr repository delete \
-                --name ${ACR_NAME} \
-                --repository ${IMAGE_NAME} \
-                --image ${IMAGE_NAME}:${oldTag} \
-                --yes || true
+                  --name ${ACR_NAME} \
+                  --image ${fullImageName} \
+                  --yes || echo 'Previous tag does not exist or already deleted.'
             """
         }
+    }
+}
+
     }
 }
        
