@@ -71,8 +71,6 @@ pipeline {
                 }
             }
         }
-        stage('Cleanup Old Image in ACR') {
-    steps {
         stage('Delete Previous ACR Tag') {
     steps {
         script {
@@ -90,9 +88,5 @@ pipeline {
         }
     }
 }
-
-    }
-}
-       
   }
 }    
