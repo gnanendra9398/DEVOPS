@@ -64,7 +64,7 @@ pipeline {
                 script {
                     def imageTag = "${ACR_NAME}.azurecr.io/${IMAGE_NAME}:${BUILD_NUMBER}"
                     sh """
-                        docker tag ${IMAGE_NAME}:${BUILD_NUMBER} ${imageTag}
+                        docker tag gnanendra9398/${IMAGE_NAME}:${BUILD_NUMBER} ${imageTag}
                         az acr login --name ${ACR_NAME}
                         docker push ${imageTag}
                     """
