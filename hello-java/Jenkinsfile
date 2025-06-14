@@ -35,6 +35,13 @@ pipeline {
                 }
             }
         }
+           stage('Build Docker Image') {
+            steps {
+                dir('hello-java'){
+                sh 'docker build -t gnanendra9398/$IMAGE_NAME:${BUILD_NUMBER} .'
+            }
+        }
+        }
 
         stage('ACR Login') {
             steps {
@@ -51,14 +58,6 @@ pipeline {
                 }
             }
 
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                dir('hello-java'){
-                sh 'docker build -t gnanendra9398/$IMAGE_NAME:${BUILD_NUMBER} .'
-            }
-        }
         }
         stage('Push Image') {
                steps {
