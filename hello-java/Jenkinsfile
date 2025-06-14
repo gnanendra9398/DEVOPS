@@ -71,13 +71,20 @@ pipeline {
                 }
             }
         }
-        stage('remove image') {
-            steps {
-                sh '''
-                       docker images --format "{{.Repository}}:{{.Tag}}" | \
-                       grep "my-java-app" | sort -t ':' -k2 -n | head -n -1 | xargs -r docker rmi
-                       '''
+        stage('Cleanup Old Image in ACR') {
+    steps {
+        script {
+            def oldTag = "${BUILD_NUMBER.toInteger() - 1}"
+            sh """
+                az acr repository delete \
+                --name ${ACR_NAME} \
+                --repository ${IMAGE_NAME} \
+                --image ${IMAGE_NAME}:${oldTag} \
+                --yes || true
+            """
+        }
     }
-        }        
+}
+       
   }
 }    
